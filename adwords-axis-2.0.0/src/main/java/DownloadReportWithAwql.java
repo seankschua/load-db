@@ -121,7 +121,7 @@ public class DownloadReportWithAwql {
 	  		query = "SELECT Date, CreativeId, Query, ExternalCustomerId, CampaignId, AdGroupId, KeywordId, " +
 	  	    	    "KeywordTextMatchingQuery, MatchType, MatchTypeWithVariant, Impressions, Clicks, Ctr, ConvertedClicks, ConversionsManyPerClick, ClickConversionRate, ConversionValue, " +
 	  	    	    "Cost, AverageCpc, CostPerConvertedClick, " +
-	  	    	    "DestinationUrl, FinalUrl " +
+	  	    	    "DestinationUrl, FinalUrl, Device " +
 	  	    	    "FROM   SEARCH_QUERY_PERFORMANCE_REPORT " +
 	  	    	    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
 	  	    	    "DURING " + queryDateString + "," + queryDateString2;
@@ -132,7 +132,7 @@ public class DownloadReportWithAwql {
 		    "Cost, AverageCpc, CpcBid, CostPerConvertedClick, " +
 		    "Labels, BiddingStrategyName, " +
 		    "QualityScore, AveragePosition, FirstPageCpc, TopOfPageCpc,  " +
-		    "CriteriaDestinationUrl, FinalUrls  " +
+		    "CriteriaDestinationUrl, FinalUrls, Device  " +
 		    "FROM   KEYWORDS_PERFORMANCE_REPORT " +
 		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
 	  	    	    "DURING " + queryDateString + "," + queryDateString2;
@@ -142,8 +142,18 @@ public class DownloadReportWithAwql {
 		    "Impressions, Clicks, Ctr, ConvertedClicks, ConversionsManyPerClick, ClickConversionRate, ConversionValue, " +
 		    "Cost, AverageCpc, CpcBid, CostPerConvertedClick, " +
 		    "Labels, BiddingStrategyName, " +
-		    "AveragePosition " +
+		    "AveragePosition, Device " +
 		    "FROM   ADGROUP_PERFORMANCE_REPORT " +
+		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
+	  	    	    "DURING " + queryDateString + "," + queryDateString2;
+	  		break;
+	  	case "ad":
+	  		query = "SELECT Date, Id, ExternalCustomerId, CampaignId, AdGroupId, KeywordId, " +
+		    "Impressions, Clicks, Ctr, ConvertedClicks, ConversionsManyPerClick, ClickConversionRate, ConversionValue, " +
+		    "Cost, AverageCpc, CostPerConvertedClick, " +
+		    "Labels, " +
+		    "AveragePosition, Device " +
+		    "FROM   AD_PERFORMANCE_REPORT " +
 		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
 	  	    	    "DURING " + queryDateString + "," + queryDateString2;
 	  		break;

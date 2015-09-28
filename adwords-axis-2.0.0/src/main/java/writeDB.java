@@ -171,6 +171,9 @@ public class writeDB {
 				if (nextLine[21].equalsIgnoreCase("")){
 					nextLine[21] = null;
 				}
+				if (nextLine[22].equalsIgnoreCase("")){
+					nextLine[22] = null;
+				}
 				
     			nextLine[12] = nextLine[12].replace("%", "");
 				//System.out.println(nextLine[11]);
@@ -202,6 +205,9 @@ public class writeDB {
     			if (nextLine[25].equalsIgnoreCase("")){
 					nextLine[25] = null;
 				}
+    			if (nextLine[26].equalsIgnoreCase("")){
+					nextLine[26] = null;
+				}
     			
     			nextLine[9] = nextLine[9].replace("%", "");
 				//System.out.println(nextLine[11]);
@@ -210,6 +216,8 @@ public class writeDB {
 				nextLine[14] = Float.toString(Float.parseFloat(nextLine[14])/1000000);
 				nextLine[15] = Float.toString(Float.parseFloat(nextLine[15])/1000000);
 				nextLine[17] = Float.toString(Float.parseFloat(nextLine[17])/1000000);
+				nextLine[22] = Float.toString(Float.parseFloat(nextLine[22])/1000000);
+				nextLine[23] = Float.toString(Float.parseFloat(nextLine[23])/1000000);
 								
 				break;
     		case "adg":
@@ -225,13 +233,33 @@ public class writeDB {
     			if (nextLine[16].equalsIgnoreCase(" --")){
 					nextLine[16] = null;
 				}
+    			if (nextLine[18].equalsIgnoreCase(" --")){
+					nextLine[18] = null;
+				}
     			
     			nextLine[6] = nextLine[6].replace("%", "");
     			nextLine[9] = nextLine[9].replace("%", "");
+    			nextLine[10] = nextLine[10].replace(",", "");
     			nextLine[11] = Float.toString(Float.parseFloat(nextLine[11])/1000000);
     			nextLine[12] = Float.toString(Float.parseFloat(nextLine[12])/1000000);
 								
 				break;
+    		case "ad":
+    			
+    			if (nextLine[16].equalsIgnoreCase(" --")){
+					nextLine[16] = null;
+				}
+    			if (nextLine[18].equalsIgnoreCase(" --")){
+					nextLine[18] = null;
+				}
+    			
+    			nextLine[8] = nextLine[8].replace("%", "");
+    			nextLine[11] = nextLine[11].replace("%", "");
+    			nextLine[12] = nextLine[12].replace(",", "");
+    			nextLine[13] = Float.toString(Float.parseFloat(nextLine[13])/1000000);
+    			nextLine[14] = Float.toString(Float.parseFloat(nextLine[14])/1000000);
+    			
+    			break;
 			default:
 				System.out.println("cleanLine(): " + tableName + " not recognised");
     	}
