@@ -212,6 +212,26 @@ public class writeDB {
 				nextLine[17] = Float.toString(Float.parseFloat(nextLine[17])/1000000);
 								
 				break;
+    		case "adg":
+    			
+    			if (nextLine[13].equalsIgnoreCase(" --")){
+					nextLine[13] = null;
+				} else {
+					nextLine[13] = Float.toString(Float.parseFloat(nextLine[13])/1000000);
+				}
+    			if (nextLine[15].equalsIgnoreCase(" --")){
+					nextLine[15] = null;
+				}
+    			if (nextLine[16].equalsIgnoreCase(" --")){
+					nextLine[16] = null;
+				}
+    			
+    			nextLine[6] = nextLine[6].replace("%", "");
+    			nextLine[9] = nextLine[9].replace("%", "");
+    			nextLine[11] = Float.toString(Float.parseFloat(nextLine[11])/1000000);
+    			nextLine[12] = Float.toString(Float.parseFloat(nextLine[12])/1000000);
+								
+				break;
 			default:
 				System.out.println("cleanLine(): " + tableName + " not recognised");
     	}

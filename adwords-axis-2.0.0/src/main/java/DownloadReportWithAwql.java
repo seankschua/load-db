@@ -137,6 +137,16 @@ public class DownloadReportWithAwql {
 		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
 	  	    	    "DURING " + queryDateString + "," + queryDateString2;
 	  		break;
+	  	case "adg":
+	  		query = "SELECT Date, AdGroupId, ExternalCustomerId, CampaignId, " +
+		    "Impressions, Clicks, Ctr, ConvertedClicks, ConversionsManyPerClick, ClickConversionRate, ConversionValue, " +
+		    "Cost, AverageCpc, CpcBid, CostPerConvertedClick, " +
+		    "Labels, BiddingStrategyName, " +
+		    "AveragePosition " +
+		    "FROM   ADGROUP_PERFORMANCE_REPORT " +
+		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
+	  	    	    "DURING " + queryDateString + "," + queryDateString2;
+	  		break;
 	  	default:
 	  		System.out.println("returnQueryString(): " + queryType + " not recognised");
 	  } 

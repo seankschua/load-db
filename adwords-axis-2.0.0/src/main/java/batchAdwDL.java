@@ -25,8 +25,9 @@ public class batchAdwDL {
 		ArrayList<String> yearList = new ArrayList<String>();
 		ArrayList<String> monthList = new ArrayList<String>();
 		
-		reportList.add("sq");
-		reportList.add("kw");
+		//reportList.add("sq");
+		//reportList.add("kw");
+		reportList.add("adg");
 		
 		clientList.add("625-898-2657");
 		
@@ -44,6 +45,7 @@ public class batchAdwDL {
 		clientList.add("785-989-6624");
 		clientList.add("304-175-4936");
 		clientList.add("652-642-7655");
+		
 		
 		yearList.add("2015");
 		
