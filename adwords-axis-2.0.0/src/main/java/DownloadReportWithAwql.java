@@ -157,6 +157,25 @@ public class DownloadReportWithAwql {
 		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
 	  	    	    "DURING " + queryDateString + "," + queryDateString2;
 	  		break;
+	  	case "cam_names":
+	  		query = "SELECT Date, ExternalCustomerId, CampaignId, CampaignName, CampaignStatus " +
+		    "FROM   CAMPAIGN_PERFORMANCE_REPORT " +
+		    "WHERE  Clicks > 0 " +
+    	    "DURING " + queryDateString + "," + queryDateString2;
+	  		break;
+	  	case "adg_names":
+	  		query = "SELECT Date, AdGroupId, ExternalCustomerId, CampaignId, AdGroupName " +
+		    "FROM   ADGROUP_PERFORMANCE_REPORT " +
+		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
+    	    "DURING " + queryDateString + "," + queryDateString2;
+	  		break;
+	  	case "ad_names":
+	  		query = "SELECT Date, Id, ExternalCustomerId, CampaignId, AdGroupId, " +
+		    "Headline, Description1, Description2 " +
+		    "FROM   AD_PERFORMANCE_REPORT " +
+		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
+    	    "DURING " + queryDateString + "," + queryDateString2;
+	  		break;
 	  	default:
 	  		System.out.println("returnQueryString(): " + queryType + " not recognised");
 	  } 

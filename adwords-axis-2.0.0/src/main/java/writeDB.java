@@ -260,6 +260,17 @@ public class writeDB {
     			nextLine[14] = Float.toString(Float.parseFloat(nextLine[14])/1000000);
     			
     			break;
+    		case "cam_names":
+    			break;
+    		case "adg_names":
+    			break;
+    		case "ad_names":
+    			
+    			if (nextLine[5].equalsIgnoreCase("")){
+					nextLine[5] = null;
+				}
+    			
+    			break;    			
 			default:
 				System.out.println("cleanLine(): " + tableName + " not recognised");
     	}

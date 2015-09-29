@@ -28,7 +28,10 @@ public class batchAdwDL {
 		//reportList.add("sq");
 		//reportList.add("kw");
 		//reportList.add("adg");
-		reportList.add("ad");
+		//reportList.add("ad");
+		reportList.add("cam_names");
+		reportList.add("adg_names");
+		reportList.add("ad_names");
 		
 		clientList.add("625-898-2657");
 		
