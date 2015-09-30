@@ -24,6 +24,17 @@ public class writeDB {
 	public static final String directory = "C:\\Users\\schuakianshun\\reports";
 	//public static final String csvFile = "C:\\Users\\schuakianshun\\reports\\sq-2015-9.csv";
 	
+	//killing EMOJIS
+	public static String removeBadChars(String s) {
+	  if (s == null) return null;
+	  StringBuilder sb = new StringBuilder();
+	  for(int i = 0 ; i < s.length() ; i++){ 
+	    if (Character.isHighSurrogate(s.charAt(i))) continue;
+	    sb.append(s.charAt(i));
+	  }
+	  return sb.toString();
+	}
+	
     public static void main(String[] args) {
 
     	List<String> csvList = new ArrayList<String>();
@@ -38,6 +49,8 @@ public class writeDB {
     	    }
     	}
     	
+    	System.out.println("Set job queue for " + csvList.size() + " items.");
+    	
         Connection con = null;
         Statement st = null;
         ResultSet rs = null;
@@ -49,6 +62,7 @@ public class writeDB {
 		int counter = 0;
 		String values = "";
 		String query = "";
+		CSVReader reader = null;
         try {
         	
         	con = DriverManager.getConnection(url, user, password);            
@@ -62,7 +76,11 @@ public class writeDB {
 				//System.out.println("clientId: " + clientId);
 				System.out.println("Reading from " + csvName + "...");
 				
-				CSVReader reader = new CSVReader(new FileReader(csvFile));
+				if (csvNameTokens[0].contentEquals("ad_names") || csvNameTokens[0].contentEquals("sq") || csvNameTokens[0].contentEquals("kw")){
+					reader = new CSVReader(new InputStreamReader(new FileInputStream(csvFile), "UTF-16"),'\t');
+				} else {
+					reader = new CSVReader(new FileReader(csvFile));
+				}
 				String [] nextLine;
 				//stupid google useless first line
 				reader.readNext();
@@ -111,7 +129,7 @@ public class writeDB {
 					
 					nextLine = cleanLine(nextLine,csvNameTokens[0]);
 					//System.out.println(Arrays.toString(nextLine));
-					//System.out.println(nextLine[16]);
+					//System.out.println(counter + ": " + nextLine[2]);
 
 					//need some length error detection here
 					for(int i=2;i<=numberOfColumns;i++){
@@ -147,11 +165,18 @@ public class writeDB {
                 if (pstmt != null) {
                 	pstmt.close();
                 }
+                if (reader != null) {
+                	reader.close();
+                }
 
             } catch (SQLException ex) {
                 Logger lgr = Logger.getLogger(writeDB.class.getName());
                 lgr.log(Level.WARNING, ex.getMessage(), ex);
-            }
+            } catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
         }
         
     }
@@ -182,7 +207,11 @@ public class writeDB {
 				nextLine[17] = Float.toString(Float.parseFloat(nextLine[17])/1000000);
 				nextLine[18] = Float.toString(Float.parseFloat(nextLine[18])/1000000);
 				nextLine[19] = Float.toString(Float.parseFloat(nextLine[19])/1000000);
-
+				
+				if(!nextLine[22].contentEquals("Computers")){
+					nextLine[2] = removeBadChars(nextLine[2]);
+				}
+				
 				break;
     		
     		case "kw":

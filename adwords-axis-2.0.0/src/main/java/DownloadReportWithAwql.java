@@ -77,10 +77,10 @@ public class DownloadReportWithAwql {
     
     String reportFile = System.getProperty("user.home") + File.separatorChar + "reports" + File.separatorChar + queryType + "-" + year + "-" + month + "-" + client + ".csv";
 
-    runExample(session, reportFile, returnQuery);
+    runExample(session, reportFile, returnQuery, queryType);
   }
 
-  public static void runExample(AdWordsSession session, String reportFile, String returnQuery) throws Exception {
+  public static void runExample(AdWordsSession session, String reportFile, String returnQuery, String queryType) throws Exception {
 	  
 	
 
@@ -88,10 +88,16 @@ public class DownloadReportWithAwql {
       // Set the property api.adwords.reportDownloadTimeout or call
       // ReportDownloader.setReportDownloadTimeout to set a timeout (in milliseconds)
       // for CONNECT and READ in report downloads.
-    	
-      ReportDownloadResponse response =
-          new ReportDownloader(session).downloadReport(returnQuery, DownloadFormat.CSV);
-      response.saveToFile(reportFile);
+    	if(queryType.contentEquals("ad_names") || queryType.contentEquals("sq") || queryType.contentEquals("kw") || 
+    			queryType.contentEquals("kw0") || queryType.contentEquals("sq0")){
+    		ReportDownloadResponse response =
+    		          new ReportDownloader(session).downloadReport(returnQuery, DownloadFormat.CSVFOREXCEL);
+    		      response.saveToFile(reportFile);
+    	} else {
+    		ReportDownloadResponse response =
+    		          new ReportDownloader(session).downloadReport(returnQuery, DownloadFormat.CSV);
+    		      response.saveToFile(reportFile);
+    	}
       
       System.out.printf("Report successfully downloaded to: %s%n", reportFile);
     } catch (ReportDownloadResponseException e) {
@@ -175,6 +181,26 @@ public class DownloadReportWithAwql {
 		    "FROM   AD_PERFORMANCE_REPORT " +
 		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
     	    "DURING " + queryDateString + "," + queryDateString2;
+	  		break;
+	  	case "kw0":
+	  		query = "SELECT Id, ExternalCustomerId, CampaignId, AdGroupId, AdGroupName, " +
+		    "Criteria, KeywordMatchType, Impressions, Clicks, Ctr, ConvertedClicks, ConversionsManyPerClick, ClickConversionRate, ConversionValue, " +
+		    "Cost, AverageCpc, CpcBid, CostPerConvertedClick, " +
+		    "Labels, BiddingStrategyName, " +
+		    "QualityScore, AveragePosition, FirstPageCpc, TopOfPageCpc,  " +
+		    "CriteriaDestinationUrl, FinalUrls, Device  " +
+		    "FROM   KEYWORDS_PERFORMANCE_REPORT " +
+		    "WHERE  Impressions > 0 AND AdGroupStatus = 'ENABLED' " +
+	  	    	    "DURING " + queryDateString + "," + queryDateString2;
+	  		break;
+	  	case "sq0":
+	  		query = "SELECT CreativeId, Query, ExternalCustomerId, CampaignId, AdGroupId, KeywordId, AdGroupName, " +
+	  	    	    "KeywordTextMatchingQuery, MatchType, MatchTypeWithVariant, Impressions, Clicks, Ctr, ConvertedClicks, ConversionsManyPerClick, ClickConversionRate, ConversionValue, " +
+	  	    	    "Cost, AverageCpc, CostPerConvertedClick, " +
+	  	    	    "DestinationUrl, FinalUrl, Device " +
+	  	    	    "FROM   SEARCH_QUERY_PERFORMANCE_REPORT " +
+	  	    	    "WHERE  Impressions > 4 AND AdGroupStatus = 'ENABLED' " +
+	  	    	    "DURING " + queryDateString + "," + queryDateString2;
 	  		break;
 	  	default:
 	  		System.out.println("returnQueryString(): " + queryType + " not recognised");

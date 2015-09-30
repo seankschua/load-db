@@ -29,9 +29,11 @@ public class batchAdwDL {
 		//reportList.add("kw");
 		//reportList.add("adg");
 		//reportList.add("ad");
-		reportList.add("cam_names");
-		reportList.add("adg_names");
-		reportList.add("ad_names");
+		//reportList.add("cam_names");
+		//reportList.add("adg_names");
+		//reportList.add("ad_names");
+		//reportList.add("kw0");
+		reportList.add("sq0");
 		
 		clientList.add("625-898-2657");
 		
@@ -53,8 +55,9 @@ public class batchAdwDL {
 		
 		yearList.add("2015");
 		
-		monthList.add("1");
-		
+		monthList.add("8");
+		//monthList.add("1");
+		/*
 		monthList.add("2");
 		monthList.add("3");
 		monthList.add("4");
@@ -63,7 +66,7 @@ public class batchAdwDL {
 		monthList.add("7");
 		monthList.add("8");
 		monthList.add("9");
-		
+		*/
 		//monthList.add("10");
 		//monthList.add("11");
 		//monthList.add("12");
