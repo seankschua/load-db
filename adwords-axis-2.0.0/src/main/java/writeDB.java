@@ -21,7 +21,7 @@ import org.gjt.mm.mysql.*;
 
 public class writeDB {
 	
-	public static final String directory = "C:\\Users\\schuakianshun\\reports";
+	public static final String directory = System.getProperty("user.home") + File.separatorChar + "reports" + File.separatorChar;
 	//public static final String csvFile = "C:\\Users\\schuakianshun\\reports\\sq-2015-9.csv";
 	
 	//killing EMOJIS
@@ -60,6 +60,10 @@ public class writeDB {
         String user = "root";
         String password = "5yTewStV";
 		int counter = 0;
+		int totalCounter = 0;
+		int SQLErrorcounter = 0;
+		ArrayList<String> SQLErrorList = new ArrayList<String>();
+		int SQLErrorLimit = 10;
 		String values = "";
 		String query = "";
 		CSVReader reader = null;
@@ -68,15 +72,19 @@ public class writeDB {
         	con = DriverManager.getConnection(url, user, password);            
 			st = con.createStatement();
 			
+			fileloop:
 			for(String csvName:csvList){
 				
 				String[] csvNameTokens = csvName.split("[-.]");
-				String csvFile =  directory + "\\" + csvName;
+				String csvFile =  directory + csvName;
+				String csvReportType = csvNameTokens[0];
+				String csvYear = csvNameTokens[1];
+				String csvMonth = csvNameTokens[2];
 				String clientId = csvNameTokens[3];
 				//System.out.println("clientId: " + clientId);
 				System.out.println("Reading from " + csvName + "...");
 				
-				if (csvNameTokens[0].contentEquals("ad_names") || csvNameTokens[0].contentEquals("sq") || csvNameTokens[0].contentEquals("kw")){
+				if (csvReportType.contentEquals("ad_names") || csvReportType.contentEquals("sq") || csvReportType.contentEquals("kw")){
 					reader = new CSVReader(new InputStreamReader(new FileInputStream(csvFile), "UTF-16"),'\t');
 				} else {
 					reader = new CSVReader(new FileReader(csvFile));
@@ -86,15 +94,22 @@ public class writeDB {
 				reader.readNext();
 				String[] headerArray = reader.readNext();
 				
-				String deleteExisting = "DELETE FROM " + csvNameTokens[0] + " WHERE YEAR(Day)=" + csvNameTokens[1] 
-						+ " AND MONTH(Day)=" + csvNameTokens[2] + " AND Customer_ID=" + clientId + ";";
+				String deleteExisting = "";
+				
+				if(csvReportType.contentEquals("adgn")){
+					deleteExisting = "DELETE FROM " + csvReportType + " WHERE Customer_ID=" + clientId + ";";
+				} else {
+					deleteExisting = "DELETE FROM " + csvReportType + " WHERE YEAR(Day)=" + csvYear
+							+ " AND MONTH(Day)=" + csvMonth+ " AND Customer_ID=" + clientId + ";";
+				}
+
 				//System.out.println(deleteExisting);
 				int deleteResult = st.executeUpdate(deleteExisting);
 				if (deleteResult>0){
-					System.out.println(deleteResult + ": deleted " + csvNameTokens[1] + "-" + csvNameTokens[2] + " date rows in table " + csvNameTokens[0]);
+					System.out.println(deleteResult + ": deleted " + csvYear+ "-" + csvMonth+ " date rows in table " + csvReportType);
 				}
 				
-				rs = st.executeQuery("SELECT * FROM " + csvNameTokens[0] + " LIMIT 1;");
+				rs = st.executeQuery("SELECT * FROM " + csvReportType + " LIMIT 1;");
 				ResultSetMetaData rsmd = rs.getMetaData();
 				int numberOfColumns = rsmd.getColumnCount();
 				String columnString = "";
@@ -107,7 +122,7 @@ public class writeDB {
 				columnString = columnString.substring(2);
 				ques = ques.substring(2);  
 				
-				query  = "INSERT INTO " + csvNameTokens[0] + "("
+				query  = "INSERT INTO " + csvReportType + "("
 						+ columnString
 						+ ")"
 						+" VALUES(" + ques + ")";
@@ -119,15 +134,21 @@ public class writeDB {
 				while ((nextLine = reader.readNext()) != null) {
 					
 					counter++;
+					if (counter==1){
+						System.out.print("Writing rows to table " + csvReportType + "...");
+					}
 					if (counter%10000==0){
-						System.out.println("Writing row " + counter + " to table " + csvNameTokens[0] + "...");
+						System.out.print(counter + "...");
+					}
+					if (counter%100000==0){
+						System.out.println("");
 					}
 					
 					if(nextLine[0].equalsIgnoreCase("Total")){
 						break;
 					}
 					
-					nextLine = cleanLine(nextLine,csvNameTokens[0]);
+					nextLine = cleanLine(nextLine,csvReportType);
 					//System.out.println(Arrays.toString(nextLine));
 					//System.out.println(counter + ": " + nextLine[2]);
 
@@ -140,11 +161,30 @@ public class writeDB {
 						pstmt.setObject(i-1, nextLine[i-2]);
 					}
 					
-					pstmt.executeUpdate();
+					try{
+						pstmt.executeUpdate();
+					}catch (SQLException e){
+						System.out.println("");
+						SQLErrorcounter++;
+						System.out.println(e.getMessage() + ", count: " + SQLErrorcounter);
+						System.out.println(Arrays.toString(nextLine));
+						SQLErrorList.add(csvName + ": " + Arrays.toString(nextLine));
+						if (SQLErrorcounter>SQLErrorLimit){
+							System.out.println(SQLErrorLimit + " errors breached. Stopping Execution.");
+							for (String errorLine : SQLErrorList){
+								System.out.println(errorLine);
+							}
+							
+						}
+						break fileloop;
+					}
+					
 					//System.out.println("pstmt.executeUpdate() " + pstmt.executeUpdate());
 					//break;
 				}
-				System.out.println("From " + csvName + " wrote a total " + counter + " rows to table " + csvNameTokens[0] + ".");
+				System.out.println("");
+				System.out.println("From " + csvName + " wrote a total " + counter + " rows to table " + csvReportType + ".");
+				totalCounter = totalCounter + counter;
 				counter = 0;
 			}
 			
@@ -178,6 +218,7 @@ public class writeDB {
 			}
             
         }
+        System.out.println("writeDB() completed with " + totalCounter + " rows, " + csvList.size() + " files, " + SQLErrorcounter + " SQL errors.");
         
     }
     
@@ -299,7 +340,17 @@ public class writeDB {
 					nextLine[5] = null;
 				}
     			
-    			break;    			
+    			break; 
+    		case "adgn":
+    			//doesn't improve query performance at all
+    			
+    			//System.out.println(nextLine.length);
+    			nextLine = Arrays.copyOf(nextLine, nextLine.length + 1);
+    			//System.out.println(nextLine.length);
+    			//System.out.println(Arrays.toString(nextLine));
+    			nextLine[nextLine.length-1] = Integer.toString(nextLine[3].contains("DSA")?1:0);
+    			
+    			break;
 			default:
 				System.out.println("cleanLine(): " + tableName + " not recognised");
     	}

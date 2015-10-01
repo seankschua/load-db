@@ -15,15 +15,22 @@ import com.google.api.client.auth.oauth2.Credential;
 
 public class batchAdwDL {
 
-	public static final String directory = "C:\\Users\\schuakianshun\\workspace\\adwords-axis-2.0.0\\src\\main\\resources";
+	//public static final String directory = "C:\\Users\\schuakianshun\\workspace\\adwords-axis-2.0.0\\src\\main\\resources";
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
+		int counter = 0;
+		
 		ArrayList<String> reportList = new ArrayList<String>();
-		ArrayList<String> clientList = new ArrayList<String>();
-		ArrayList<String> yearList = new ArrayList<String>();
-		ArrayList<String> monthList = new ArrayList<String>();
+		
+		//ArrayList<String> clientList = new ArrayList<String>(Arrays.asList("1074194775"));
+		ArrayList<String> clientList = Utility.accounts;
+		
+		ArrayList<String> yearList = new ArrayList<String>(Arrays.asList("2015"));
+		
+		//ArrayList<String> monthList = new ArrayList<String>(Arrays.asList("1"));
+		ArrayList<String> monthList = Utility.monthList;
 		
 		//reportList.add("sq");
 		//reportList.add("kw");
@@ -33,44 +40,10 @@ public class batchAdwDL {
 		//reportList.add("adg_names");
 		//reportList.add("ad_names");
 		//reportList.add("kw0");
-		reportList.add("sq0");
+		//reportList.add("sq0");
 		
-		clientList.add("625-898-2657");
-		
-		clientList.add("650-647-5316");
-		clientList.add("205-085-2785");
-		clientList.add("614-715-1681");
-		clientList.add("755-787-7834");
-		clientList.add("750-364-8530");
-		clientList.add("494-728-9561");
-		clientList.add("186-235-1155");
-		clientList.add("107-419-4775");
-		clientList.add("536-619-7879");
-		clientList.add("132-066-5226");
-		clientList.add("878-409-7667");
-		clientList.add("785-989-6624");
-		clientList.add("304-175-4936");
-		clientList.add("652-642-7655");
-		
-		
-		yearList.add("2015");
-		
-		monthList.add("8");
-		//monthList.add("1");
-		/*
-		monthList.add("2");
-		monthList.add("3");
-		monthList.add("4");
-		monthList.add("5");
-		monthList.add("6");
-		monthList.add("7");
-		monthList.add("8");
-		monthList.add("9");
-		*/
-		//monthList.add("10");
-		//monthList.add("11");
-		//monthList.add("12");
-		
+		//date agnostic, but sets query range to jan1 of year to 2 days before today
+		reportList.add("adgn");
 		
 		for (String report:reportList){
 			System.out.println("Downloading report type " + report + "...");
@@ -94,6 +67,8 @@ public class batchAdwDL {
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+						} finally {
+							counter++;
 						}
 					}
 				}
@@ -102,7 +77,7 @@ public class batchAdwDL {
 		
 		
 		
-		
+		System.out.println("batchAdwDL() completed with " + counter + " files.");
 	}
 
 }

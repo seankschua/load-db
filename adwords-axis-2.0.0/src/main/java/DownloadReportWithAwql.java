@@ -108,6 +108,12 @@ public class DownloadReportWithAwql {
   public static String returnQueryString(String queryType, int year, int month) {
 	  
 	  Calendar calendar = Calendar.getInstance();
+	  calendar.add(Calendar.DATE, -2);
+	  Date minus2Day = calendar.getTime();
+	  calendar.set(Calendar.YEAR, year);
+	  calendar.set(Calendar.MONTH, 1);
+	  calendar.set(Calendar.DATE, 1);
+	  Date beginYearDay = calendar.getTime();
 	  calendar.set(Calendar.YEAR, year);
 	  calendar.set(Calendar.MONTH, month-1);
 	  calendar.set(Calendar.DATE, 1);
@@ -201,6 +207,12 @@ public class DownloadReportWithAwql {
 	  	    	    "FROM   SEARCH_QUERY_PERFORMANCE_REPORT " +
 	  	    	    "WHERE  Impressions > 4 AND AdGroupStatus = 'ENABLED' " +
 	  	    	    "DURING " + queryDateString + "," + queryDateString2;
+	  		break;
+	  	case "adgn":
+	  		query = "SELECT AdGroupId, ExternalCustomerId, CampaignId, AdGroupName " +
+		    "FROM   ADGROUP_PERFORMANCE_REPORT " +
+		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +
+    	    "DURING " + sdf.format(beginYearDay) + "," + sdf.format(minus2Day);
 	  		break;
 	  	default:
 	  		System.out.println("returnQueryString(): " + queryType + " not recognised");
