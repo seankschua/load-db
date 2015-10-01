@@ -31,6 +31,7 @@ public class repeatQuery {
         String password = Utility.password;
         
         int counter= 0;
+        int totalCounter=0;
         TimeZone timeZone = TimeZone.getTimeZone("Singapore");
         Calendar calendar = Calendar.getInstance(timeZone);
         SimpleDateFormat sdf = 
@@ -65,6 +66,7 @@ public class repeatQuery {
 							rs = st.executeQuery(query(type,client,year,month));
 							wr.writeAll(rs, counter==0);
 							counter++;
+							totalCounter++;
 							//Thread.sleep(2*1000);
 							calendar = Calendar.getInstance(timeZone);
 							System.out.println("Written resultset " + counter + " at " + sdf.format(calendar.getTime()));
@@ -79,8 +81,9 @@ public class repeatQuery {
 				System.out.print("total resultsets written: " + counter);
 				System.out.println();
 				System.out.println();
+				counter = 0;
 			}
-			System.out.println("repeatQuery() completed with " + queryList.size() + " files.");
+			System.out.println("repeatQuery() completed with " + queryList.size() + " files, " + totalCounter + " resultsets.");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
