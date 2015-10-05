@@ -21,7 +21,7 @@ import org.gjt.mm.mysql.*;
 
 public class writeDB {
 	
-	public static final String directory = System.getProperty("user.home") + File.separatorChar + "reports" + File.separatorChar;
+	public static final String directory = System.getProperty("user.home") + File.separatorChar + "reports_test" + File.separatorChar;
 	//public static final String csvFile = "C:\\Users\\schuakianshun\\reports\\sq-2015-9.csv";
 	
 	//killing EMOJIS
@@ -35,7 +35,7 @@ public class writeDB {
 	  return sb.toString();
 	}
 	
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
 
     	List<String> csvList = new ArrayList<String>();
     	File[] files = new File(directory).listFiles();
@@ -55,8 +55,11 @@ public class writeDB {
         Statement st = null;
         ResultSet rs = null;
         PreparedStatement pstmt = null;
+        
+        String url ="jdbc:sqlserver://chelsqlgis027.karmalab.net\\SQLEXPRESS;databaseName=SEM;integratedSecurity=true";
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-        String url = "jdbc:mysql://127.0.0.1:3306/expedia";
+        //String url = "jdbc:mysql://127.0.0.1:3306/expedia";
         String user = "root";
         String password = "5yTewStV";
 		int counter = 0;
@@ -69,7 +72,10 @@ public class writeDB {
 		CSVReader reader = null;
         try {
         	
-        	con = DriverManager.getConnection(url, user, password);            
+        	//con = DriverManager.getConnection(url, user, password);            
+			//st = con.createStatement();
+			
+			con = DriverManager.getConnection(url);  
 			st = con.createStatement();
 			
 			fileloop:

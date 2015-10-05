@@ -29,16 +29,16 @@ public class batchAdwDL {
 		
 		ArrayList<String> yearList = new ArrayList<String>(Arrays.asList("2015"));
 		
-		//ArrayList<String> monthList = new ArrayList<String>(Arrays.asList("1"));
-		ArrayList<String> monthList = Utility.monthList;
+		ArrayList<String> monthList = new ArrayList<String>(Arrays.asList("9"));
+		//ArrayList<String> monthList = Utility.monthList;
 		
-		//reportList.add("sq");
-		//reportList.add("kw");
-		//reportList.add("adg");
-		//reportList.add("ad");
-		//reportList.add("cam_names");
-		//reportList.add("adg_names");
-		//reportList.add("ad_names");
+		reportList.add("sq");
+		reportList.add("kw");
+		reportList.add("adg");
+		reportList.add("ad");
+		reportList.add("cam_names");
+		reportList.add("adg_names");
+		reportList.add("ad_names");
 		//reportList.add("kw0");
 		//reportList.add("sq0");
 		

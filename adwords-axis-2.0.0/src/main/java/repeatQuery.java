@@ -42,7 +42,8 @@ public class repeatQuery {
 		//ArrayList<String> clientList = new ArrayList<String>(Arrays.asList("1074194775"));
 		ArrayList<String> clientList = Utility.accounts;
 		ArrayList<String> yearList = new ArrayList<String>(Arrays.asList("2015"));
-		ArrayList<String> monthList = new ArrayList<String>(Arrays.asList("8","9"));
+		ArrayList<String> monthList = new ArrayList<String>(Arrays.asList("1","2","3","4","5","6"));
+		//ArrayList<String> monthList = new ArrayList<String>(Arrays.asList("8","9"));
 		//ArrayList<String> monthList = Utility.monthList;
         
         try {
@@ -104,10 +105,10 @@ public class repeatQuery {
 				toReturn = "select * from sq limit 10";
 				break;
 			case "matchtypeDSA":
-				toReturn =	"select cid.ClientName, sq.day, dsa, Match_type_variant, " 
-						+	"sum(impressions) as impressions, sum(clicks) as clicks, sum(conversions) as conversions, " 
+				toReturn =	"select cid.ClientName, sq.day, dsa, Match_type_variant, count(*) as count, " 
+						+	"sum(impressions) as impressions, sum(clicks) as clicks, sum(Converted_clicks) as Converted_clicks, sum(conversions) as conversions, " 
 						+	"sum(Total_conv_value) as GP, sum(cost) as cost, "
-						+	"sum(clicks)/sum(impressions) as CTR, sum(conversions)/sum(clicks) as CVR, "  
+						+	"sum(clicks)/sum(impressions) as CTR, sum(Converted_clicks)/sum(clicks) as CVR, sum(conversions)/sum(clicks) as CVR2, "
 						+	"sum(Total_conv_value)/sum(clicks) as GPpC, sum(cost)/sum(clicks) as CpC " 
 						+	"from sq " 
 						+	"inner join cid " 
@@ -119,10 +120,10 @@ public class repeatQuery {
 						+	"group by cid.ClientName, day, Match_type_variant, DSA";
 				break;
 			case "matchtype":
-				toReturn =	"select cid.ClientName, sq.day, 'Total' as dsa, Match_type_variant, " 
-						+	"sum(impressions) as impressions, sum(clicks) as clicks, sum(conversions) as conversions, " 
+				toReturn =	"select cid.ClientName, sq.day, 'Total' as dsa, Match_type_variant, count(*) as count, "
+						+	"sum(impressions) as impressions, sum(clicks) as clicks, sum(Converted_clicks) as Converted_clicks, sum(conversions) as conversions, " 
 						+	"sum(Total_conv_value) as GP, sum(cost) as cost, "
-						+	"sum(clicks)/sum(impressions) as CTR, sum(conversions)/sum(clicks) as CVR, "  
+						+	"sum(clicks)/sum(impressions) as CTR, sum(Converted_clicks)/sum(clicks) as CVR, sum(conversions)/sum(clicks) as CVR2, "
 						+	"sum(Total_conv_value)/sum(clicks) as GPpC, sum(cost)/sum(clicks) as CpC " 
 						+	"from sq " 
 						+	"inner join cid " 
