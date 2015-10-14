@@ -75,6 +75,11 @@ public class DownloadReportWithAwql {
     //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
     //String dateTime = LocalDateTime.now().format(formatter);
     
+    if(queryType.contentEquals("n_adg")){
+    	month = 1;
+    	year = 2014;
+    }
+    
     String reportFile = System.getProperty("user.home") + File.separatorChar + "reports" + File.separatorChar + queryType + "-" + year + "-" + month + "-" + client + ".csv";
 
     runExample(session, reportFile, returnQuery, queryType);
@@ -110,7 +115,7 @@ public class DownloadReportWithAwql {
 	  Calendar calendar = Calendar.getInstance();
 	  calendar.add(Calendar.DATE, -2);
 	  Date minus2Day = calendar.getTime();
-	  calendar.set(Calendar.YEAR, year);
+	  calendar.set(Calendar.YEAR, 2014);
 	  calendar.set(Calendar.MONTH, 1);
 	  calendar.set(Calendar.DATE, 1);
 	  Date beginYearDay = calendar.getTime();
@@ -208,7 +213,7 @@ public class DownloadReportWithAwql {
 	  	    	    "WHERE  Impressions > 4 AND AdGroupStatus = 'ENABLED' " +
 	  	    	    "DURING " + queryDateString + "," + queryDateString2;
 	  		break;
-	  	case "adgn":
+	  	case "n_adg":
 	  		query = "SELECT AdGroupId, ExternalCustomerId, CampaignId, AdGroupName " +
 		    "FROM   ADGROUP_PERFORMANCE_REPORT " +
 		    "WHERE  Clicks > 0 AND AdGroupStatus = 'ENABLED' " +

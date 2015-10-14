@@ -21,7 +21,7 @@ import org.gjt.mm.mysql.*;
 
 public class writeDB {
 	
-	public static final String directory = System.getProperty("user.home") + File.separatorChar + "reports_test" + File.separatorChar;
+	public static final String directory = System.getProperty("user.home") + File.separatorChar + "reports" + File.separatorChar;
 	//public static final String csvFile = "C:\\Users\\schuakianshun\\reports\\sq-2015-9.csv";
 	
 	//killing EMOJIS
@@ -49,37 +49,41 @@ public class writeDB {
     	    }
     	}
     	
-    	System.out.println("Set job queue for " + csvList.size() + " items.");
+    	Date jobStart = new Date();
+    	System.out.println("writeDB() starting with " + csvList.size() + " items, at " + jobStart);
     	
         Connection con = null;
         Statement st = null;
         ResultSet rs = null;
         PreparedStatement pstmt = null;
         
-        String url ="jdbc:sqlserver://chelsqlgis027.karmalab.net\\SQLEXPRESS;databaseName=SEM;integratedSecurity=true";
+        String url2 ="jdbc:sqlserver://chelsqlgis027.karmalab.net\\SQLEXPRESS;databaseName=SEM;integratedSecurity=true";
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-        //String url = "jdbc:mysql://127.0.0.1:3306/expedia";
-        String user = "root";
-        String password = "5yTewStV";
-		int counter = 0;
-		int totalCounter = 0;
+        String url = Utility.url;
+        String user = Utility.user;
+        String password = Utility.password;
+        
+		int rowCounter = 0;
+		int totalRowCounter = 0;
 		int SQLErrorcounter = 0;
 		ArrayList<String> SQLErrorList = new ArrayList<String>();
 		int SQLErrorLimit = 10;
-		String values = "";
+		int currentFileCounter = 0;
 		String query = "";
 		CSVReader reader = null;
         try {
         	
-        	//con = DriverManager.getConnection(url, user, password);            
-			//st = con.createStatement();
-			
-			con = DriverManager.getConnection(url);  
+        	con = DriverManager.getConnection(url, user, password);            
 			st = con.createStatement();
+			
+			//con = DriverManager.getConnection(url2);  
+			//st = con.createStatement();
 			
 			fileloop:
 			for(String csvName:csvList){
+
+				currentFileCounter++;
 				
 				String[] csvNameTokens = csvName.split("[-.]");
 				String csvFile =  directory + csvName;
@@ -102,7 +106,7 @@ public class writeDB {
 				
 				String deleteExisting = "";
 				
-				if(csvReportType.contentEquals("adgn")){
+				if(csvReportType.contentEquals("n_adg")){
 					deleteExisting = "DELETE FROM " + csvReportType + " WHERE Customer_ID=" + clientId + ";";
 				} else {
 					deleteExisting = "DELETE FROM " + csvReportType + " WHERE YEAR(Day)=" + csvYear
@@ -139,14 +143,14 @@ public class writeDB {
 				
 				while ((nextLine = reader.readNext()) != null) {
 					
-					counter++;
-					if (counter==1){
+					rowCounter++;
+					if (rowCounter==1){
 						System.out.print("Writing rows to table " + csvReportType + "...");
 					}
-					if (counter%10000==0){
-						System.out.print(counter + "...");
+					if (rowCounter%10000==0){
+						System.out.print(rowCounter + "...");
 					}
-					if (counter%100000==0){
+					if (rowCounter%100000==0){
 						System.out.println("");
 					}
 					
@@ -189,9 +193,9 @@ public class writeDB {
 					//break;
 				}
 				System.out.println("");
-				System.out.println("From " + csvName + " wrote a total " + counter + " rows to table " + csvReportType + ".");
-				totalCounter = totalCounter + counter;
-				counter = 0;
+				System.out.println(Utility.jobStatus(jobStart, csvList.size(), currentFileCounter, csvName + ", " + rowCounter + " rows"));
+				totalRowCounter = totalRowCounter + rowCounter;
+				rowCounter = 0;
 			}
 			
         } catch (SQLException ex) {
@@ -224,7 +228,7 @@ public class writeDB {
 			}
             
         }
-        System.out.println("writeDB() completed with " + totalCounter + " rows, " + csvList.size() + " files, " + SQLErrorcounter + " SQL errors.");
+        System.out.println("writeDB() completed with " + totalRowCounter + " rows, " + csvList.size() + " files, " + SQLErrorcounter + " SQL errors.");
         
     }
     
@@ -347,7 +351,7 @@ public class writeDB {
 				}
     			
     			break; 
-    		case "adgn":
+    		case "n_adg":
     			//doesn't improve query performance at all
     			
     			//System.out.println(nextLine.length);

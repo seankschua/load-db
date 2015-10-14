@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class Utility {
 	
@@ -25,4 +26,17 @@ public class Utility {
                     "8784097667"));
 	
 	public static final ArrayList<String> monthList = new ArrayList<String>(Arrays.asList("1","2","3","4","5","6","7","8","9"));
+	
+	public static String timeElapsed(Date date1, Date date2){
+		long difference = (date2.getTime() - date1.getTime())/1000;
+		int seconds = (int)(difference%60);
+		int minutes = (int)((difference/60)%60);
+		int hours = (int)((difference/3600));
+		return hours + "h " + minutes + "m " + seconds + "s";
+	}
+	
+	public static String jobStatus(Date start, int jobCount, int currentJob, String currentJobName){
+		Date currentDate = new Date();
+		return "Job " + currentJob + "/" + jobCount + " " + currentJobName + " completed at " + currentDate + ", time elapsed: " + timeElapsed(start, currentDate);
+	}
 }
